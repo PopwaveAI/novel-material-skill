@@ -106,10 +106,24 @@ cp -r novel-material-skill ~/.codex/skills/novel-material
 
 ## 统计口径
 
-字数按仓库内正文统计：含标点，不含空白与 Markdown 符号。你可以自己验：
+字数按仓库内正文统计：含标点，不含空白与 Markdown 符号，也不含每节的文件头（标题行和「素材来源」行）。你可以自己验：
 
 ```bash
-find references -name "*.md" -exec cat {} + | wc -m
+python3 - <<'PY'
+import re, pathlib
+def n(t):
+    t = re.sub(r"^\|[\s\-:|]+\|$", "", t, flags=re.M).replace("|", "")
+    t = re.sub(r"^#{1,6}\s*", "", t, flags=re.M)
+    t = re.sub(r"^>\s*", "", t, flags=re.M)
+    return len(re.sub(r"\s", "", t))
+tot = 0
+for p in pathlib.Path("references").rglob("*.md"):
+    if p.name == "_index.md" or p.parent.name == "references":
+        continue
+    keep = [l for l in p.read_text().splitlines()
+            if l and not l.startswith("# ") and not l.startswith("> 素材来源")]
+    tot += n("\n".join(keep))
+print(tot)   # 3078704
 ```
 
 ---
