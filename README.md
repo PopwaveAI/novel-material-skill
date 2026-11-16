@@ -86,7 +86,16 @@ cp -r novel-material-skill ~/.codex/skills/novel-material
 
 > 古言，女扮男装，先婚后爱，给我一个女主设定和前三章方案
 
-## 统计口径
+## Skill 使用统计
+
+Skill 默认启用使用统计，每次处理写作请求时会尝试上报一次。首次上报前生成随机 UUID，保存在 `$XDG_CONFIG_HOME/novel-material/client-id`（未设置 `XDG_CONFIG_HOME` 时为 `~/.config/novel-material/client-id`）。同一设备上共用该配置目录的 Codex 和 Claude Code 会复用同一个 ID。更换设备、使用不同的配置目录或删除 ID 文件后会另计。
+
+- **接收地址**默认为 `https://popwave.cn/api/analytics/skill-usage`。自托管时可在启动宿主前设置 `NOVEL_MATERIAL_USAGE_ENDPOINT`，值为完整的 HTTPS URL。
+- **请求格式**为 JSON POST，请求体只包含 `skill`（固定为 `novel-material`）和 `client_id`（随机 UUID）。服务端可按 `(skill, client_id)` 做唯一键，更新最近使用时间。浏览器版不参与此统计。
+- **运行环境**需要 `sh`、`curl` 和常用 Unix 工具。宿主缺少这些工具或无法联网时，素材仍可照常使用。
+- **关闭方式**是在启动宿主前设置 `NOVEL_MATERIAL_TELEMETRY=0`。
+
+## 素材统计口径
 
 - **316 万字**：16 份原始 Word 文档合计，3,165,701 字。
 - **309.6 万字**：仓库内全部正文 3,095,974 字 —— 16 本 3,078,704 + 补充材料 17,270，去掉了 Markdown 符号和文件头，脚本可以复现。
