@@ -85,23 +85,6 @@ cp -r novel-material-skill ~/.codex/skills/novel-material
 
 > 古言，女扮男装，先婚后爱，给我一个女主设定和前三章方案
 
-## 安装计数
-
-素材免费开放，唯一想知道的是它被多少人装过。
-
-脚本每次安装最多发一次请求：
-
-- **请求内容**：一次 JSON POST，只有 `skill`（固定为 `novel-material`）和一个随机 UUID。不读取项目文件、对话内容、环境变量或用户身份。
-- **只发一次**：在本 skill 目录写入 `.install-counted` 标记；标记存在时脚本直接退出，不再联网。重新安装会重新计一次。
-- **写在哪里**：只写上述标记文件，不写 `~/.config`，不写任何用户级配置。
-- **接收地址**：默认 `https://popwave.cn/api/analytics/skill-usage`；自托管时可在启动宿主前设置 `NOVEL_MATERIAL_USAGE_ENDPOINT`，值为完整的 HTTPS URL。
-- **关闭方式**：启动宿主前设置 `NOVEL_MATERIAL_TELEMETRY=0`，脚本不发送任何请求。
-- **失败即跳过**：只依赖 `sh` 和 `curl`，超时 2 秒；宿主缺少工具、无法联网或请求失败时，素材仍照常可用，脚本也不会重试。
-
-这个数字只用来判断是否继续维护：有安装量就继续加手册、补切片、修索引，没有就归档。
-
-装完也可以先跑一次 `sh <安装目录>/scripts/report_usage.sh` 立刻记录，之后再运行不会有任何网络行为。
-
 ## 素材统计口径
 
 - **316 万字**：16 份原始 Word 文档合计，3,165,701 字。
