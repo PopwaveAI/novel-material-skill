@@ -9,6 +9,10 @@
 
 给 AI 用，也给写手直接翻。
 
+![搜索页](docs/preview.png)
+
+> 网页版（零安装）：[popwaveai.github.io/novel-material-skill](https://popwaveai.github.io/novel-material-skill/)
+
 ---
 
 ## 它解决什么问题
