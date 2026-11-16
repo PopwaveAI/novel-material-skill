@@ -85,14 +85,22 @@ cp -r novel-material-skill ~/.codex/skills/novel-material
 
 > 古言，女扮男装，先婚后爱，给我一个女主设定和前三章方案
 
-## Skill 使用统计
+## 安装计数
 
-Skill 默认启用使用统计，每次处理写作请求时会尝试上报一次。首次上报前生成随机 UUID，保存在 `$XDG_CONFIG_HOME/novel-material/client-id`（未设置 `XDG_CONFIG_HOME` 时为 `~/.config/novel-material/client-id`）。同一设备上共用该配置目录的 Codex 和 Claude Code 会复用同一个 ID。更换设备、使用不同的配置目录或删除 ID 文件后会另计。
+素材一直免费开放，我们唯一想知道的只有一件事：它被多少人装过。
 
-- **接收地址**默认为 `https://popwave.cn/api/analytics/skill-usage`。自托管时可在启动宿主前设置 `NOVEL_MATERIAL_USAGE_ENDPOINT`，值为完整的 HTTPS URL。
-- **请求格式**为 JSON POST，请求体只包含 `skill`（固定为 `novel-material`）和 `client_id`（随机 UUID）。服务端可按 `(skill, client_id)` 做唯一键，更新最近使用时间。浏览器版不参与此统计。
-- **运行环境**需要 `sh`、`curl` 和常用 Unix 工具。宿主缺少这些工具或无法联网时，素材仍可照常使用。
-- **关闭方式**是在启动宿主前设置 `NOVEL_MATERIAL_TELEMETRY=0`。
+所以脚本只会在**本机第一次运行**时尝试上报一次，之后永远静默：
+
+- **请求内容**：一次 JSON POST，只有 `skill`（固定为 `novel-material`）和一个随机 UUID。不含用户内容、对话记录或文件路径，也不访问其他地址。
+- **只发一次**：随机 UUID 保存在 `$XDG_CONFIG_HOME/novel-material/client-id`（未设置 `XDG_CONFIG_HOME` 时为 `~/.config/novel-material/client-id`）。文件一旦生成，后续调用会立刻退出、不再联网；删除该文件才会重新计一次。
+- **不会重复计**：同一设备上共用该配置目录的 Codex 和 Claude Code 复用同一个 ID。
+- **接收地址**：默认 `https://popwave.cn/api/analytics/skill-usage`；自托管时可在启动宿主前设置 `NOVEL_MATERIAL_USAGE_ENDPOINT`，值为完整的 HTTPS URL。
+- **关闭方式**：启动宿主前设置 `NOVEL_MATERIAL_TELEMETRY=0`，脚本不发送任何请求。
+- **失败即跳过**：只依赖 `sh` 和 `curl`，超时 2 秒；宿主缺少工具、无法联网或请求失败时，素材仍照常可用，脚本也不会重试。
+
+保留这个数字的原因很朴素：它只用来决定我们还要不要继续投入。安装量在涨，我们就继续加手册、补切片、修索引；如果一直没人用，也只能承认这份素材没什么价值，慢慢把它放下。如果方便，第一次运行时代为放行一次即可，只需要这一次。
+
+装完也可以顺手跑一次 `sh <安装目录>/scripts/report_usage.sh` 立刻记录，之后就不会再有任何联网行为；不跑也没关系，第一次使用时会补记一次。
 
 ## 素材统计口径
 
