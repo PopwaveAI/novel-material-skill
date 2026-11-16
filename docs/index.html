@@ -69,7 +69,7 @@ function esc(s) { return s.replace(/[&<>]/g, function (c) { return {"&":"&amp;",
 fetch("index.json").then(function (r) { return r.json(); }).then(function (d) {
   DATA = d;
   d.books.forEach(function (b) { BNAME[b.id] = b.name; });
-  var cats = ["通识","人设","关系","题材"];
+  var cats = ["通识","人设","关系","题材","补充"];
   document.getElementById("chips").innerHTML = ["全部"].concat(cats).map(function (c) {
     return '<span class="chip' + ((c === "全部" && !CAT) ? " on" : (c === CAT ? " on" : "")) +
       '" data-c="' + (c === "全部" ? "" : c) + '">' + c + "</span>";
